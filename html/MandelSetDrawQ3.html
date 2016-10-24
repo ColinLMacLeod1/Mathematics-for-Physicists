@@ -1,0 +1,169 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>MandelDraw -- Creating a Set</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-09-30"><meta name="DC.source" content="MandelSetDrawQ3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>MandelDraw -- Creating a Set</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Initializing</a></li><li><a href="#2">Creating the Matrix of Values</a></li></ul></div><h2>Initializing<a name="1"></a></h2><pre class="codeinput">n = 100; <span class="comment">%the number of iterations of testing for divergence</span>
+grid = 1000; <span class="comment">%the number of points between the limits (size of grid)</span>
+xlims = [-1 ,1]; <span class="comment">%The limits of he x axis</span>
+ylims = [-1.5,1.5]; <span class="comment">%The limits of the y axis</span>
+x = linspace(xlims(1),xlims(2),grid); <span class="comment">%The x values</span>
+y = linspace(ylims(1),ylims(2),grid); <span class="comment">%The y values</span>
+[xMesh,yMesh] = meshgrid(x,y); <span class="comment">%Creating a mesh for x and y for 2D plotting</span>
+c = xMesh + yMesh*1i; <span class="comment">%Initializing all the initial values and setting the x axis to real and y to complex</span>
+z = c; <span class="comment">%Because z(0) = c</span>
+convCount = ones(grid,grid); <span class="comment">%Initializing a matrix to count how many times the solution converges</span>
+Zsum = zeros(grid,grid);
+</pre><h2>Creating the Matrix of Values<a name="2"></a></h2><pre class="codeinput"><span class="keyword">for</span> i = 0:n
+   z = z.^3 + c; <span class="comment">%Z(n+1)</span>
+   Zsum = Zsum+z; <span class="comment">%Zsum was used to test the threshold (maximum value before divergence)</span>
+   <span class="comment">%I found that at low n, the abolute value of convergin numbers was alway</span>
+   <span class="comment">%below 2 even if the max value was set to 5 or 10.</span>
+   conv = abs(z) &lt; 2; <span class="comment">%Creating a matrix of where the valus will converge</span>
+   convCount = convCount + conv; <span class="comment">%Increase each adress of convCount by one for each convering value</span>
+<span class="keyword">end</span>
+
+figure(1) <span class="comment">%Initialixe Figue 1</span>
+imagesc(x,y,convCount); <span class="comment">%Creates an graphic with scaled colours based on convCount</span>
+colormap(flipud(hot())); <span class="comment">%Changing the colour scheme for aesthetics</span>
+title(<span class="string">'Set of converging initial values for z_{n+1}=z^{3}_{n}+c'</span>);
+xlabel(<span class="string">'Re(z_{0})'</span>);
+ylabel(<span class="string">'Im(z_{0})'</span>);
+
+figure(2)
+imagesc(x,y,convCount);
+colormap(hot());
+title(<span class="string">'Set of converging initial values for z_{n+1}=z^{3}_{n}+c'</span>);
+xlabel(<span class="string">'Re(z_{0})'</span>);
+ylabel(<span class="string">'Im(z_{0})'</span>);
+<span class="comment">%{
+</span><span class="comment">figure(3)
+</span><span class="comment">imagesc(x,y,convCount);
+</span><span class="comment">colormap(jet());
+</span><span class="comment">title('Set of converging initial values for z_{n+1}=z^{2}_{n}-0.83+0.2i');
+</span><span class="comment">xlabel('Re(z_{0})');
+</span><span class="comment">ylabel('Im(z_{0})');
+</span><span class="comment">figure(4)
+</span><span class="comment">imagesc(x,y,convCount);
+</span><span class="comment">colormap(cool());
+</span><span class="comment">title('Set of converging initial values for z_{n+1}=z^{2}_{n}-0.83+0.2i');
+</span><span class="comment">xlabel('Re(z_{0})');
+</span><span class="comment">ylabel('Im(z_{0})');
+</span><span class="comment">%}</span>
+</pre><img vspace="5" hspace="5" src="MandelSetDrawQ3_01.png" alt=""> <img vspace="5" hspace="5" src="MandelSetDrawQ3_02.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% MandelDraw REPLACE_WITH_DASH_DASH Creating a Set
+%% Initializing
+n = 100; %the number of iterations of testing for divergence
+grid = 1000; %the number of points between the limits (size of grid)
+xlims = [-1 ,1]; %The limits of he x axis
+ylims = [-1.5,1.5]; %The limits of the y axis
+x = linspace(xlims(1),xlims(2),grid); %The x values
+y = linspace(ylims(1),ylims(2),grid); %The y values
+[xMesh,yMesh] = meshgrid(x,y); %Creating a mesh for x and y for 2D plotting
+c = xMesh + yMesh*1i; %Initializing all the initial values and setting the x axis to real and y to complex
+z = c; %Because z(0) = c
+convCount = ones(grid,grid); %Initializing a matrix to count how many times the solution converges
+Zsum = zeros(grid,grid);
+%% Creating the Matrix of Values
+for i = 0:n 
+   z = z.^3 + c; %Z(n+1)
+   Zsum = Zsum+z; %Zsum was used to test the threshold (maximum value before divergence) 
+   %I found that at low n, the abolute value of convergin numbers was alway
+   %below 2 even if the max value was set to 5 or 10.
+   conv = abs(z) < 2; %Creating a matrix of where the valus will converge
+   convCount = convCount + conv; %Increase each adress of convCount by one for each convering value
+end
+
+figure(1) %Initialixe Figue 1
+imagesc(x,y,convCount); %Creates an graphic with scaled colours based on convCount
+colormap(flipud(hot())); %Changing the colour scheme for aesthetics
+title('Set of converging initial values for z_{n+1}=z^{3}_{n}+c');
+xlabel('Re(z_{0})');
+ylabel('Im(z_{0})');
+
+figure(2)
+imagesc(x,y,convCount);
+colormap(hot());
+title('Set of converging initial values for z_{n+1}=z^{3}_{n}+c');
+xlabel('Re(z_{0})');
+ylabel('Im(z_{0})');
+%{
+figure(3)
+imagesc(x,y,convCount);
+colormap(jet());
+title('Set of converging initial values for z_{n+1}=z^{2}_{n}-0.83+0.2i');
+xlabel('Re(z_{0})');
+ylabel('Im(z_{0})');
+figure(4)
+imagesc(x,y,convCount);
+colormap(cool());
+title('Set of converging initial values for z_{n+1}=z^{2}_{n}-0.83+0.2i');
+xlabel('Re(z_{0})');
+ylabel('Im(z_{0})');
+%}
+##### SOURCE END #####
+--></body></html>
